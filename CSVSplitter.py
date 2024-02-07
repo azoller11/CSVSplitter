@@ -9,6 +9,10 @@
 import csv
 import os
 from tkinter import Tk, filedialog
+import sys
+
+# Increase the maximum field size allowed
+csv.field_size_limit(2147483647)
 
 def select_csv_file():
     """Open a file dialog to select a CSV file."""
@@ -20,7 +24,7 @@ def select_csv_file():
 
 
 ##########EDIT CHUNK SIZE HERE#######
-def split_csv_into_chunks(file_path, chunk_size=3500):
+def split_csv_into_chunks(file_path, chunk_size=20000):
     """Split a CSV file into smaller chunks."""
     # Ensure output directory exists
     base_name = os.path.basename(file_path).split(".")[0]
@@ -28,7 +32,7 @@ def split_csv_into_chunks(file_path, chunk_size=3500):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    with open(file_path, 'r', newline='') as csv_file:
+    with open(file_path, 'r', newline='', encoding='utf-8') as csv_file:
         reader = csv.reader(csv_file)
         headers = next(reader)
         file_count = 1
@@ -49,7 +53,7 @@ def split_csv_into_chunks(file_path, chunk_size=3500):
 def write_chunk_to_csv(output_folder, file_count, headers, records):
     """Write a chunk of records to a new CSV file."""
     output_file = os.path.join(output_folder, f"chunk_{file_count}.csv")
-    with open(output_file, 'w', newline='') as chunk_file:
+    with open(output_file, 'w', newline='', encoding='utf-8') as chunk_file:  # Added encoding='utf-8'
         writer = csv.writer(chunk_file)
         writer.writerow(headers)
         writer.writerows(records)
